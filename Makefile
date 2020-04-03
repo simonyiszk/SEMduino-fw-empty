@@ -4,19 +4,19 @@
 # License: <insert your license reference here>
 
 # DEVICE ....... The AVR device you compile for
-# CLOCK ........ Target AVR clock rate in Hertz
 # OBJECTS ...... The object files created from your source files. This list is
 #                usually the same as the list of source files with suffix ".o".
 # PROGRAMMER ... Options to avrdude which define the hardware you use for
 #                uploading to the AVR and the interface where this hardware
 #                is connected.
-# FUSES ........ Parameters for avrdude to flash the fuses appropriately.
+# UART_PORT .... Flash communication port e.g.: COM1, /dev/ttyUSB0 etc.
 
 UART_PORT  = /dev/ttyUSB0
 PROJECT    = test
 DEVICE     = atmega328p
 PROGRAMMER = -carduino -P${UART_PORT} -b115200
 
+RM = rm
 
 ######################################################################
 ######################################################################
@@ -51,14 +51,14 @@ flash:	all
 	$(AVRDUDE) -U flash:w:$(PROJECT).hex:i
 
 clean:
-	rm -f *.hex *.elf *.o
+	$(RM) -f *.hex *.elf *.o
 
 # file targets:
 $(PROJECT).elf: $(OBJECTS)
 	$(COMPILE) -o $(PROJECT).elf $(OBJECTS)
 
 $(PROJECT).hex: $(PROJECT).elf
-	rm -f $(PROJECT).hex
+	$(RM) -f $(PROJECT).hex
 	avr-objcopy -j .text -j .data -O ihex $(PROJECT).elf $(PROJECT).hex
 # If you have an EEPROM section, you must also create a hex file for the
 # EEPROM and add it to the "flash" target.
