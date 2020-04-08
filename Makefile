@@ -57,6 +57,9 @@ clean:
 $(PROJECT).elf: $(OBJECTS)
 	$(COMPILE) -o $(PROJECT).elf $(OBJECTS)
 
+$(PROJECT).lst: $(PROJECT).elf
+	avr-objdump -h -S $(PROJECT).elf > $(PROJECT).lst
+
 $(PROJECT).hex: $(PROJECT).elf
 	$(RM) -f $(PROJECT).hex
 	avr-objcopy -j .text -j .data -O ihex $(PROJECT).elf $(PROJECT).hex
