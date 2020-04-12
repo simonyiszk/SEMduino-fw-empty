@@ -57,9 +57,6 @@ clean:
 $(PROJECT).elf: $(OBJECTS)
 	$(COMPILE) -o $(PROJECT).elf $(OBJECTS)
 
-$(PROJECT).lst: $(PROJECT).elf
-	avr-objdump -h -S $(PROJECT).elf > $(PROJECT).lst
-
 $(PROJECT).hex: $(PROJECT).elf
 	$(RM) -f $(PROJECT).hex
 	avr-objcopy -j .text -j .data -O ihex $(PROJECT).elf $(PROJECT).hex
@@ -67,8 +64,10 @@ $(PROJECT).hex: $(PROJECT).elf
 # EEPROM and add it to the "flash" target.
 
 # Targets for code debugging and analysis:
-disasm:	$(PROJECT).elf
-	avr-objdump -d $(PROJECT).elf
+disasm:	$(PROJECT).lst
+
+$(PROJECT).lst: $(PROJECT).elf
+	avr-objdump -d $(PROJECT).elf > $(PROJECT).lst
 
 cpp:
 	$(COMPILE) -E $(PROJECT).c
